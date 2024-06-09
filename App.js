@@ -34,6 +34,7 @@ export default function App() {
   };
 
   const onReset = () => {
+    setPickEmoji(null);
     setShowAppOptions(false);
   };
 
