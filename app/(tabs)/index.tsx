@@ -8,6 +8,7 @@ import PlantView from '../../components/PlantView';
 import GrowthProgress from '../../components/GrowthProgress';
 import ActionButton from '../../components/ActionButton';
 import HarvestModal from '../../components/HarvestModal';
+import { RewardedAd, RewardedAdEventType, TestIds } from 'react-native-google-mobile-ads';
 
 export default function HomeScreen() {
   const { user, refreshUser } = useAuth();
@@ -37,21 +38,43 @@ export default function HomeScreen() {
   };
 
   const handleWater = async () => {
-    // TODO: Show rewarded ad first, then call water
     setLoading(true);
-    const { error } = await supabase.functions.invoke('water');
-    if (error) Alert.alert('Error', error.message);
-    await fetchStatus();
-    setLoading(false);
+    const ad = RewardedAd.createForAdRequest(TestIds.REWARDED);
+
+    const unsubLoaded = ad.addAdEventListener(RewardedAdEventType.LOADED, () => {
+      ad.show();
+    });
+
+    const unsubEarned = ad.addAdEventListener(RewardedAdEventType.EARNED_REWARD, async () => {
+      const { error } = await supabase.functions.invoke('water');
+      if (error) Alert.alert('Error', error.message);
+      await fetchStatus();
+      setLoading(false);
+      unsubLoaded();
+      unsubEarned();
+    });
+
+    ad.load();
   };
 
   const handleFertilize = async () => {
-    // TODO: Show rewarded ad first, then call fertilize
     setLoading(true);
-    const { error } = await supabase.functions.invoke('fertilize');
-    if (error) Alert.alert('Error', error.message);
-    await fetchStatus();
-    setLoading(false);
+    const ad = RewardedAd.createForAdRequest(TestIds.REWARDED);
+
+    const unsubLoaded = ad.addAdEventListener(RewardedAdEventType.LOADED, () => {
+      ad.show();
+    });
+
+    const unsubEarned = ad.addAdEventListener(RewardedAdEventType.EARNED_REWARD, async () => {
+      const { error } = await supabase.functions.invoke('fertilize');
+      if (error) Alert.alert('Error', error.message);
+      await fetchStatus();
+      setLoading(false);
+      unsubLoaded();
+      unsubEarned();
+    });
+
+    ad.load();
   };
 
   const handleHarvest = async () => {
