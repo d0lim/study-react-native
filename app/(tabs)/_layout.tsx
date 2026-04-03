@@ -1,32 +1,35 @@
-import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
-
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
-
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: useClientOnlyValue(false, true),
-      }}>
+    <Tabs screenOptions={{ tabBarActiveTintColor: '#4CAF50' }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          title: '내 농장',
+          tabBarIcon: ({ color }) => <MaterialIcons name="eco" size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="shop"
+        options={{
+          title: '상점',
+          tabBarIcon: ({ color }) => <MaterialIcons name="storefront" size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="inventory"
+        options={{
+          title: '아이템',
+          tabBarIcon: ({ color }) => <MaterialIcons name="inventory-2" size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="invite"
+        options={{
+          title: '초대',
+          tabBarIcon: ({ color }) => <MaterialIcons name="person-add" size={24} color={color} />,
         }}
       />
     </Tabs>
