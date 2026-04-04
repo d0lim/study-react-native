@@ -31,8 +31,9 @@ export default function HomeScreen() {
 
   const handlePlantSeed = async () => {
     setLoading(true);
-    const { error } = await supabase.functions.invoke('plant-seed');
-    if (error) Alert.alert('Error', error.message);
+    const { data, error } = await supabase.functions.invoke('plant-seed');
+    console.log('plant-seed response:', JSON.stringify({ data, error: error?.message }));
+    if (error) Alert.alert('Error', typeof error === 'object' ? JSON.stringify(error) : error.message);
     await fetchStatus();
     setLoading(false);
   };

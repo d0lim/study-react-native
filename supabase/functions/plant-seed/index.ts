@@ -3,12 +3,17 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 Deno.serve(async (req) => {
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL')!,
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+  );
+
+  const authClient = createClient(
+    Deno.env.get('SUPABASE_URL')!,
     Deno.env.get('SUPABASE_ANON_KEY')!,
     { global: { headers: { Authorization: req.headers.get('Authorization')! } } }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+  const { data: { user } } = await authClient.auth.getUser();
+  if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { data: existing } = await supabase
     .from('plants')
